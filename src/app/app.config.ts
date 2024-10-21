@@ -1,8 +1,12 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { environment } from './environments/environment';
 
-import { routes } from './app.routes';
+// Initialize Firebase
+const firebaseApp = initializeApp(environment.firebaseConfig);
 
-export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes)]
-};
+// Get Firebase Authentication instance
+const auth = getAuth(firebaseApp);
+
+// Export the app and auth objects
+export { firebaseApp, auth };
