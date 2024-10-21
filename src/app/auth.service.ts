@@ -1,38 +1,37 @@
 import { Injectable } from '@angular/core';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, getAuth } from 'firebase/auth';
-import { auth } from './app.config'; // Ensure this path is correct based on your project structure
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User } from 'firebase/auth';
+import { auth } from './app.config';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
-  constructor() {}
+  private user: User | null = null;
 
-  async register(email: string, password: string) {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      return userCredential;
-    } catch (error) {
-      console.error('Registration error:', error);
-      throw error;
-    }
+  constructor() {
+    // Specify the type for the user parameter
+    auth.onAuthStateChanged((user: User | null) => {
+      this.user = user;
+    });
   }
 
-  async login(email: string, password: string) {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      return userCredential;
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    }
+  async login(email: string, password: string): Promise<void> {
+    await signInWithEmailAndPassword(auth, email, password);
   }
 
-  async logout() {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
+  async register(email: string, password: string): Promise<void> {
+    await createUserWithEmailAndPassword(auth, email, password);
+  }
+
+  async logout(): Promise<void> {
+    await signOut(auth);
+  }
+
+  isLoggedIn(): boolean {
+    return this.user !== null;
+  }
+
+  getUserName(): string | null {
+    return this.user ? this.user.email : null; // Or user.displayName if set
   }
 }

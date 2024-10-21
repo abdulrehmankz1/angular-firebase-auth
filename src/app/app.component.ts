@@ -1,55 +1,33 @@
-// import { Component } from '@angular/core';
-// import { RouterOutlet } from '@angular/router';
-
-// @Component({
-//   selector: 'app-root',
-//   standalone: true,
-//   imports: [RouterOutlet],
-//   templateUrl: './app.component.html',
-//   styleUrl: './app.component.scss'
-// })
-// export class AppComponent {
-//   title = 'firebase-auth';
-// }
-// src/app/app.component.ts
 import { Component } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { AuthService } from './auth.service';
+import { AuthService } from './auth.service'; // Import AuthService
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  standalone: true, // Specify that this is a standalone component
-  imports: [FormsModule] // Add FormsModule to the imports array
+  standalone: true,
+  imports: [RouterModule, FormsModule] // Ensure both RouterModule and FormsModule are imported
 })
 export class AppComponent {
-  email: string = '';
-  password: string = '';
-  message: string = '';
+  email: string = ''; // Declare email property
+  password: string = ''; // Declare password property
+  message: string = ''; // Declare message property to show login status
 
-  constructor(private authService: AuthService) {}
-
-  async register() {
-    try {
-      await this.authService.register(this.email, this.password);
-      this.message = 'Registration successful!';
-    } catch (error: any) { // Specify error as any
-      this.message = 'Registration failed: ' + error.message;
-    }
-  }
+  constructor(private router: Router, private authService: AuthService) {}
 
   async login() {
     try {
       await this.authService.login(this.email, this.password);
-      this.message = 'Login successful!';
+      this.message = 'Login successful!'; // Set success message
+      this.router.navigate(['/home']); // Redirect to home on successful login
     } catch (error: any) { // Specify error as any
-      this.message = 'Login failed: ' + error.message;
+      this.message = 'Login failed: ' + (error?.message || 'Unknown error'); // Set error message
     }
   }
 
-  async logout() {
-    await this.authService.logout();
-    this.message = 'Logged out!';
+  navigateToHome() {
+    this.router.navigate(['/home']); // Example for navigating to home
   }
 }

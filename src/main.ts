@@ -1,12 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
-import { firebaseApp, auth } from './app/app.config'; // Importing from app.config
+import { provideRouter } from '@angular/router';
+import { appRoutes } from './app/app.routes'; // Import your routes
 
-// Bootstrap the application
-bootstrapApplication(AppComponent)
-  .then(() => {
-    console.log('Application bootstrapped');
-  })
-  .catch((error) => {
-    console.error('Bootstrap failed', error);
-  });
+bootstrapApplication(AppComponent, {
+  providers: [provideRouter(appRoutes)] // Use provideRouter for routing
+});
