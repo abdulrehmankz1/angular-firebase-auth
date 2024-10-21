@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -9,11 +10,12 @@ import { AuthService } from '../auth.service';
 export class HomeComponent {
   userName: string | null = null;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     this.userName = this.authService.getUserName();
   }
 
-  logout() {
-    this.authService.logout();
+  async logout() {
+    await this.authService.logout();
+    this.router.navigate(['/']); // Redirect to login page after logout
   }
 }
