@@ -5,17 +5,17 @@ import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
   userName: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {
-    this.userName = this.authService.getUserName();
+    this.userName = this.authService.getUserName(); // Get user's email to display
   }
 
   async logout() {
-    await this.authService.logout();
+    await this.authService.logout(); // Logout and then redirect to login
     this.router.navigate(['/']);
   }
 }
