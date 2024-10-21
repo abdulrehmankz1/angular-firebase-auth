@@ -5,4 +5,4 @@ import { environment } from './environments/environment';
 const firebaseApp = initializeApp(environment.firebaseConfig);
 const auth = getAuth(firebaseApp);
 
-export { firebaseApp, auth }; // Ensure auth is exported
+export { firebaseApp, auth };

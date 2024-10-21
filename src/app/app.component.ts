@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { AuthService } from './auth.service'; // Import AuthService
 
@@ -8,7 +8,7 @@ import { AuthService } from './auth.service'; // Import AuthService
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [RouterModule, FormsModule] // Ensure both RouterModule and FormsModule are imported
+  imports: [RouterModule, FormsModule, RouterLink]
 })
 export class AppComponent {
   email: string = ''; // Declare email property
