@@ -16,6 +16,6 @@ export class HomeComponent {
 
   async logout() {
     await this.authService.logout();
-    this.router.navigate(['/']); // Redirect to login page after logout
+    this.router.navigate(['/']);
   }
 }

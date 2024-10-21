@@ -21,9 +21,9 @@ export class LoginComponent {
     try {
       await this.authService.login(this.email, this.password);
       this.message = 'Login successful!';
-      this.router.navigate(['/home']); // Redirect to home page on successful login
+      this.router.navigate(['/home']);
     } catch (error) {
-      this.message = 'Login failed: ' + (error as Error).message; // Explicitly casting to Error
+      this.message = 'Login failed: ' + (error as Error).message;
     }
   }
 }

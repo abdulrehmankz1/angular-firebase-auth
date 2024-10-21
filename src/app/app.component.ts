@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { AuthService } from './auth.service'; // Import AuthService
+import { FormsModule } from '@angular/forms'; 
+import { AuthService } from './auth.service'; 
 
 @Component({
   selector: 'app-root',
@@ -11,23 +11,23 @@ import { AuthService } from './auth.service'; // Import AuthService
   imports: [RouterModule, FormsModule, RouterLink]
 })
 export class AppComponent {
-  email: string = ''; // Declare email property
-  password: string = ''; // Declare password property
-  message: string = ''; // Declare message property to show login status
+  email: string = ''; 
+  password: string = '';
+  message: string = '';
 
   constructor(private router: Router, private authService: AuthService) {}
 
   async login() {
     try {
       await this.authService.login(this.email, this.password);
-      this.message = 'Login successful!'; // Set success message
-      this.router.navigate(['/home']); // Redirect to home on successful login
-    } catch (error: any) { // Specify error as any
-      this.message = 'Login failed: ' + (error?.message || 'Unknown error'); // Set error message
+      this.message = 'Login successful!'; 
+      this.router.navigate(['/home']);
+    } catch (error: any) {
+      this.message = 'Login failed: ' + (error?.message || 'Unknown error'); 
     }
   }
 
   navigateToHome() {
-    this.router.navigate(['/home']); // Example for navigating to home
+    this.router.navigate(['/home']); 
   }
 }
