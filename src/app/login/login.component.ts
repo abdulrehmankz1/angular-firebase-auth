@@ -7,8 +7,8 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-standalone: true, 
-imports: [RouterModule, FormsModule, RouterLink]
+  standalone: true,
+  imports: [RouterModule, FormsModule, RouterLink]
 })
 export class LoginComponent {
   email: string = '';
@@ -21,9 +21,19 @@ export class LoginComponent {
     try {
       await this.authService.login(this.email, this.password);
       this.message = 'Login successful!';
-      this.router.navigate(['/home']);
-    } catch (error) {
-      this.message = 'Login failed: ' + (error as Error).message;
+      this.router.navigate(['/home']); // Redirect to home page after successful login
+    } catch (error: any) {
+      this.message = 'Login failed: ' + (error?.message || 'Unknown error');
+    }
+  }
+
+  async googleSignIn() {
+    try {
+      await this.authService.googleSignIn();
+      this.message = 'Google login successful!';
+      this.router.navigate(['/home']); // Redirect to home page after successful Google sign-in
+    } catch (error: any) {
+      this.message = 'Google login failed: ' + (error?.message || 'Unknown error');
     }
   }
 }
