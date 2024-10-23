@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { FormsModule } from '@angular/forms';
+import { RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,7 @@ export class LoginComponent {
     try {
       await this.authService.login(this.email, this.password);
       this.message = 'Login successful!';
-      this.router.navigate(['/home']); // Redirect to home page after successful login
+      this.router.navigate(['/home']); 
     } catch (error: any) {
       this.message = 'Login failed: ' + (error?.message || 'Unknown error');
     }
@@ -31,7 +32,7 @@ export class LoginComponent {
     try {
       await this.authService.googleSignIn();
       this.message = 'Google login successful!';
-      this.router.navigate(['/home']); // Redirect to home page after successful Google sign-in
+      this.router.navigate(['/home']);
     } catch (error: any) {
       this.message = 'Google login failed: ' + (error?.message || 'Unknown error');
     }
