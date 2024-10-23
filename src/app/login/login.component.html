@@ -1,4 +1,4 @@
-<div class="container mt-5 w-50">
+<div class="container mt-5">
   <h1>Login</h1>
   <form (ngSubmit)="login()">
     <div class="mb-3">
@@ -8,8 +8,11 @@
       <input [(ngModel)]="password" name="password" type="password" class="form-control" placeholder="Password" required />
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
+    <button (click)="googleSignIn()" type="button" class="btn btn-danger mt-3">Login with Google</button>
     <p>{{ message }}</p>
     <span>Don't have an account? </span>
     <a routerLink="/signup" routerLinkActive="active" ariaCurrentWhenActive="page">Sign up here</a>
+
   </form>
 </div>
+
