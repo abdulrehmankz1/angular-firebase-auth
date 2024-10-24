@@ -9,7 +9,7 @@ import { RouterLink, RouterModule } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [RouterModule, FormsModule, RouterLink]
+  imports: [RouterModule, FormsModule, RouterLink],
 })
 export class LoginComponent {
   email: string = '';
@@ -22,7 +22,7 @@ export class LoginComponent {
     try {
       await this.authService.login(this.email, this.password);
       this.message = 'Login successful!';
-      this.router.navigate(['/home']); 
+      this.router.navigate(['/home']);
     } catch (error: any) {
       this.message = 'Login failed: ' + (error?.message || 'Unknown error');
     }
@@ -34,7 +34,8 @@ export class LoginComponent {
       this.message = 'Google login successful!';
       this.router.navigate(['/home']);
     } catch (error: any) {
-      this.message = 'Google login failed: ' + (error?.message || 'Unknown error');
+      this.message =
+        'Google login failed: ' + (error?.message || 'Unknown error');
     }
   }
 }

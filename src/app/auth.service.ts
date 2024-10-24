@@ -1,60 +1,107 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from 'firebase/auth';
-import { auth } from './app.config'; // Your firebase config
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  User,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  updateProfile,
+} from 'firebase/auth';
+import { setDoc, doc, getDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { auth, firestore } from './app.config';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private userSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
+  private userSubject: BehaviorSubject<User | null> =
+    new BehaviorSubject<User | null>(null);
 
   constructor() {
-    // Check the authentication state on initialization
     onAuthStateChanged(auth, (user) => {
       if (user) {
         this.userSubject.next(user);
-        localStorage.setItem('user', JSON.stringify(user)); // Store user data in localStorage
+        localStorage.setItem('user', JSON.stringify(user));
       } else {
         this.userSubject.next(null);
-        localStorage.removeItem('user'); // Remove user data from localStorage
+        localStorage.removeItem('user');
       }
     });
   }
 
-  // Expose the user as an observable
   getUserObservable(): Observable<User | null> {
     return this.userSubject.asObservable();
   }
 
   isLoggedIn(): boolean {
-    return this.userSubject.value !== null || localStorage.getItem('user') !== null; // Check if user is logged in (localStorage fallback)
+    return (
+      this.userSubject.value !== null || localStorage.getItem('user') !== null
+    );
   }
 
-  // Login function
   async login(email: string, password: string): Promise<void> {
     await signInWithEmailAndPassword(auth, email, password);
   }
 
-  // Register function
-  async register(email: string, password: string): Promise<void> {
-    await createUserWithEmailAndPassword(auth, email, password);
+  async register(
+    email: string,
+    password: string,
+    name: string,
+    imageFile: File
+  ): Promise<void> {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+
+    // Update user profile with name and image
+    await updateProfile(user, {
+      displayName: name,
+      photoURL: await this.uploadImage(imageFile), // Upload image and get URL
+    });
+
+    // Store user data in Firestore
+    await setDoc(doc(firestore, 'users', user.uid), {
+      uid: user.uid,
+      email: user.email,
+      name: name,
+      imageUrl: user.photoURL, // Store the image URL
+    });
   }
 
-  // Logout function
   async logout(): Promise<void> {
     await signOut(auth);
-    localStorage.removeItem('user'); // Remove user data from localStorage on logout
+    localStorage.removeItem('user');
   }
 
-  // Google sign-in function
   async googleSignIn(): Promise<void> {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
   }
 
-  getUserName(): string | null {
-    const user = this.userSubject.value || JSON.parse(localStorage.getItem('user') || 'null');
-    return user ? user.email : null; // Return user email if logged in
+  async getUserData(uid: string): Promise<any> {
+    const docRef = doc(firestore, 'users', uid);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists() ? docSnap.data() : null; // Return user data if it exists
+  }
+
+  getUserInfo(): User | null {
+    return (
+      this.userSubject.value ||
+      JSON.parse(localStorage.getItem('user') || 'null')
+    );
+  }
+
+  async uploadImage(file: File): Promise<string> {
+    const storage = getStorage();
+    const storageRef = ref(storage, `images/${file.name}`);
+    await uploadBytes(storageRef, file);
+    return await getDownloadURL(storageRef);
   }
 }

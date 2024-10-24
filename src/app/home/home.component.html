@@ -1,4 +1,12 @@
-<div class="container mx-auto w-50">
-  <h1>Welcome, {{ userName }}</h1>
-  <button (click)="logout()" class="btn btn-danger">Logout</button>
+<div *ngIf="userName; else loginTemplate">
+  <h1>Welcome, {{ userName }}.</h1>
+  <img *ngIf="userImage; else noImage" [src]="userImage" alt="User Image">
+  <ng-template #noImage>
+    <p>Add Image</p>
+  </ng-template>
+  <button (click)="logout()">Logout</button>
 </div>
+
+<ng-template #loginTemplate>
+  <h1>Please log in.</h1>
+</ng-template>
