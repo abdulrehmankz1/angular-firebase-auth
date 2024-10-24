@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [RouterModule, FormsModule] // Ensure RouterModule is imported
+  imports: [RouterModule, FormsModule], // Ensure RouterModule and FormsModule are imported
 })
 export class AppComponent implements OnInit {
   email: string = '';
