@@ -1,6 +1,9 @@
 <div *ngIf="userName; else loginTemplate">
-  <h1>Welcome, {{ userName }}</h1>
-  <img *ngIf="userImage" [src]="userImage" alt="User Image" />
+  <h1>Welcome, {{ userName }}.</h1>
+  <img *ngIf="userImage; else noImage" [src]="userImage" alt="User Image">
+  <ng-template #noImage>
+    <p>Add Image</p>
+  </ng-template>
   <button (click)="logout()">Logout</button>
 </div>
 

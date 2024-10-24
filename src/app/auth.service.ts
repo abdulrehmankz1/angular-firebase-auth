@@ -1,15 +1,6 @@
 import { Injectable } from '@angular/core';
-import {
-  Auth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  User,
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged,
-} from 'firebase/auth';
-import { Firestore, setDoc, doc } from 'firebase/firestore';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, updateProfile } from 'firebase/auth';
+import { Firestore, setDoc, doc, getDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { auth, firestore } from './app.config';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -22,10 +13,11 @@ export class AuthService {
 
   constructor() {
     onAuthStateChanged(auth, (user) => {
-      this.userSubject.next(user);
       if (user) {
+        this.userSubject.next(user);
         localStorage.setItem('user', JSON.stringify(user));
       } else {
+        this.userSubject.next(null);
         localStorage.removeItem('user');
       }
     });
@@ -47,15 +39,18 @@ export class AuthService {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // Upload the image and get the URL
-    const imageUrl = await this.uploadImage(imageFile);
+    // Update user profile with name and image
+    await updateProfile(user, {
+      displayName: name,
+      photoURL: await this.uploadImage(imageFile) // Upload image and get URL
+    });
 
     // Store user data in Firestore
     await setDoc(doc(firestore, 'users', user.uid), {
       uid: user.uid,
       email: user.email,
       name: name,
-      imageUrl: imageUrl,
+      imageUrl: user.photoURL, // Store the image URL
     });
   }
 
@@ -69,15 +64,20 @@ export class AuthService {
     await signInWithPopup(auth, provider);
   }
 
-  getUserName(): string | null {
-    const user = this.userSubject.value || JSON.parse(localStorage.getItem('user') || 'null');
-    return user ? user.email : null; // Change to return user name later
+  async getUserData(uid: string): Promise<any> {
+    const docRef = doc(firestore, 'users', uid);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists() ? docSnap.data() : null; // Return user data if it exists
+  }
+
+  getUserInfo(): User | null {
+    return this.userSubject.value || JSON.parse(localStorage.getItem('user') || 'null');
   }
 
   async uploadImage(file: File): Promise<string> {
-    const storage = getStorage(); // Get a reference to the storage
-    const storageRef = ref(storage, `images/${file.name}`); // Create a reference to the file
-    await uploadBytes(storageRef, file); // Upload the file
-    return await getDownloadURL(storageRef); // Get the download URL
+    const storage = getStorage();
+    const storageRef = ref(storage, `images/${file.name}`);
+    await uploadBytes(storageRef, file);
+    return await getDownloadURL(storageRef);
   }
 }
