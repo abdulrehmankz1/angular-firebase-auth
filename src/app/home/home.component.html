@@ -1,12 +1,15 @@
-<div *ngIf="userName; else loginTemplate">
-  <h1>Welcome, {{ userName }}.</h1>
-  <img *ngIf="userImage; else noImage" [src]="userImage" alt="User Image">
-  <ng-template #noImage>
-    <p>Add Image</p>
-  </ng-template>
-  <button (click)="logout()">Logout</button>
+<!-- home.component.html -->
+<div>
+  <h1>All Users</h1>
+  <table>
+    <tr *ngFor="let user of users">
+      <td>{{ user.name || user.email }}</td>
+      <td>
+        <img *ngIf="user.imageUrl; else noImageUser" height="50px" width="50px" [src]="user.imageUrl" alt="User Image" />
+        <ng-template #noImageUser>
+          <p>null</p>
+        </ng-template>
+      </td>
+    </tr>
+  </table>
 </div>
-
-<ng-template #loginTemplate>
-  <h1>Please log in.</h1>
-</ng-template>

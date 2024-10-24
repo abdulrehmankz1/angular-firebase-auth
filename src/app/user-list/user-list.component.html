@@ -1,0 +1,23 @@
+<div class="container mt-4">
+    <h2>User List</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <img *ngIf="user.imageUrl" [src]="user.imageUrl" alt="User Image" width="50" height="50" class="rounded-circle">
+            <span *ngIf="!user.imageUrl">Add Image</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

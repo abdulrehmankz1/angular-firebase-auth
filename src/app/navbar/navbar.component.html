@@ -1,0 +1,16 @@
+<!-- navbar.component.html -->
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+      <!-- Display user's name as the brand -->
+      <a class="navbar-brand" *ngIf="userName">{{ userName }}</a>
+      <a class="navbar-brand" *ngIf="!userName">Navbar</a> <!-- Fallback if userName is not available -->
+      
+      <div class="d-flex align-items-center ms-auto">
+        <img *ngIf="userImage; else noImage" [src]="userImage" alt="User Image" height="30" width="30" class="rounded-circle me-2">
+        <ng-template #noImage>
+          <span class="me-2">Add Image</span>
+        </ng-template>
+        <button (click)="logout()" class="btn btn-outline-danger">Logout</button>
+      </div>
+    </div>
+</nav>

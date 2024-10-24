@@ -1,15 +1,18 @@
+// app.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { NavbarComponent } from './navbar/navbar.component';
+import { CommonModule } from '@angular/common'; // Import CommonModule
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [RouterModule, FormsModule],
+  imports: [RouterModule, FormsModule, NavbarComponent, CommonModule], // Include CommonModule here
 })
 export class AppComponent implements OnInit {
   email: string = '';
