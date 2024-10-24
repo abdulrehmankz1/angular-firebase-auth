@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class HomeComponent implements OnInit {
   userName: string | null = null;
@@ -33,17 +33,16 @@ export class HomeComponent implements OnInit {
         this.userImage = null; // No image available
       }
     } else {
-      this.router.navigate(['/']); 
+      this.router.navigate(['/']);
     }
   }
 
   async logout() {
     try {
-        await this.authService.logout(); // Make sure the logout is successful
-        this.router.navigate(['/']); // Navigate to the login page or home page
+      await this.authService.logout(); // Make sure the logout is successful
+      this.router.navigate(['/']); // Navigate to the login page or home page
     } catch (error) {
-        console.error('Logout failed', error); // Log any error that occurs
+      console.error('Logout failed', error); // Log any error that occurs
     }
-}
-
+  }
 }

@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [RouterModule, FormsModule], // Ensure RouterModule and FormsModule are imported
+  imports: [RouterModule, FormsModule],
 })
 export class AppComponent implements OnInit {
   email: string = '';
@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // Check if user is logged in on app load
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/home']); // Redirect to home if user is already logged in
+      this.router.navigate(['/home']);
     }
   }
 

@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, updateProfile } from 'firebase/auth';
-import { Firestore, setDoc, doc, getDoc } from 'firebase/firestore';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  User,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  updateProfile,
+} from 'firebase/auth';
+import { setDoc, doc, getDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { auth, firestore } from './app.config';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -9,7 +18,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  private userSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
+  private userSubject: BehaviorSubject<User | null> =
+    new BehaviorSubject<User | null>(null);
 
   constructor() {
     onAuthStateChanged(auth, (user) => {
@@ -28,21 +38,32 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return this.userSubject.value !== null || localStorage.getItem('user') !== null;
+    return (
+      this.userSubject.value !== null || localStorage.getItem('user') !== null
+    );
   }
 
   async login(email: string, password: string): Promise<void> {
     await signInWithEmailAndPassword(auth, email, password);
   }
 
-  async register(email: string, password: string, name: string, imageFile: File): Promise<void> {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  async register(
+    email: string,
+    password: string,
+    name: string,
+    imageFile: File
+  ): Promise<void> {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     const user = userCredential.user;
 
     // Update user profile with name and image
     await updateProfile(user, {
       displayName: name,
-      photoURL: await this.uploadImage(imageFile) // Upload image and get URL
+      photoURL: await this.uploadImage(imageFile), // Upload image and get URL
     });
 
     // Store user data in Firestore
@@ -71,7 +92,10 @@ export class AuthService {
   }
 
   getUserInfo(): User | null {
-    return this.userSubject.value || JSON.parse(localStorage.getItem('user') || 'null');
+    return (
+      this.userSubject.value ||
+      JSON.parse(localStorage.getItem('user') || 'null')
+    );
   }
 
   async uploadImage(file: File): Promise<string> {

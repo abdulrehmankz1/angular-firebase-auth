@@ -8,7 +8,7 @@ import { RouterLink, RouterModule } from '@angular/router';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
   standalone: true,
-  imports: [RouterModule, FormsModule, RouterLink]
+  imports: [RouterModule, FormsModule, RouterLink],
 })
 export class SignupComponent {
   email: string = '';
@@ -29,7 +29,12 @@ export class SignupComponent {
   async register() {
     if (this.imageFile) {
       try {
-        await this.authService.register(this.email, this.password, this.name, this.imageFile);
+        await this.authService.register(
+          this.email,
+          this.password,
+          this.name,
+          this.imageFile
+        );
         this.message = 'Registration successful! Please login.';
       } catch (error: any) {
         this.message = 'Registration failed: ' + error.message;
